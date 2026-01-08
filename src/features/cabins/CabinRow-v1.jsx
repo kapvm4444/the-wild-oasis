@@ -1,21 +1,13 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers.js";
-import { HiOutlineTrash, HiSquare2Stack } from "react-icons/hi2";
-import {
-  HiOutlineDuplicate,
-  HiOutlinePencil,
-  HiOutlineX,
-  HiPencil,
-  HiTrash,
-} from "react-icons/hi";
-import { useState } from "react";
+import { HiOutlineTrash } from "react-icons/hi2";
+import { HiOutlineDuplicate, HiOutlinePencil } from "react-icons/hi";
 import CreateCabinForm from "./CreateCabinForm.jsx";
 import { useDeleteCabin } from "./useDeleteCabin.js";
 import { useCreateCabin } from "./useCreateCabin.js";
 import Modal from "../../ui/Modal.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import Table from "../../ui/Table.jsx";
-import Menus from "../../ui/Menus.jsx";
 
 /*
 const TableRow = styled.div`
@@ -160,34 +152,27 @@ export function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <Actions>
+          {/*Duplicate Button*/}
+          <DuplicateButton disabled={isCreating} onClick={handleDuplicating}>
+            <HiOutlineDuplicate />
+          </DuplicateButton>
           <Modal>
-            <Menus.Menu>
-              <Menus.Toggle id={id} />
-              <Menus.List id={id}>
-                {/*Duplicate Button*/}
-                <Menus.Button
-                  icon={<HiSquare2Stack />}
-                  onClick={handleDuplicating}
-                >
-                  Duplicate
-                </Menus.Button>
-
-                {/*Edit Button*/}
-                <Modal.Open opens={"edit"}>
-                  <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
-                </Modal.Open>
-
-                {/*Delete Button*/}
-                <Modal.Open opens={"delete"}>
-                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-                </Modal.Open>
-              </Menus.List>
-            </Menus.Menu>
-
+            {/*Edit Button*/}
+            <Modal.Open opens={"edit"}>
+              <EditButton>
+                <HiOutlinePencil />
+              </EditButton>
+            </Modal.Open>
             <Modal.Window name={"edit"}>
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
 
+            {/*Delete Button*/}
+            <Modal.Open opens={"delete"}>
+              <DeleteButton>
+                <HiOutlineTrash />
+              </DeleteButton>
+            </Modal.Open>
             <Modal.Window name={"delete"}>
               <ConfirmDelete
                 resourceName="cabins"

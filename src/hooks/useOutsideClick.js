@@ -9,10 +9,18 @@ export default function UseOutsideClick(handler, listenCapturing = true) {
         if (ref.current && !ref.current.contains(e.target)) handler();
       }
 
-      document.addEventListener("click", handleClick, listenCapturing);
+      function handleEscape(e) {
+        if (e.key === "Escape" || e.key === "Esc" || e.keyCode === 27)
+          handler();
+      }
 
-      return () =>
+      document.addEventListener("click", handleClick, listenCapturing);
+      document.addEventListener("keydown", handleEscape, listenCapturing);
+
+      return () => {
         document.removeEventListener("click", handleClick, listenCapturing);
+        document.removeEventListener("keydown", handleEscape, listenCapturing);
+      };
     },
     [handler, listenCapturing],
   );

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import Logo from "./Logo.jsx";
-import MainNav from "./MainNav.jsx";
+import Logo from "./Logo";
+import MainNav from "./MainNav";
 
 const StyledSidebar = styled.aside`
   background-color: var(--color-grey-0);
@@ -13,7 +13,7 @@ const StyledSidebar = styled.aside`
   gap: 3.2rem;
 `;
 
-export default function Sidebar() {
+function Sidebar() {
   return (
     <StyledSidebar>
       <Logo />
@@ -21,3 +21,5 @@ export default function Sidebar() {
     </StyledSidebar>
   );
 }
+
+export default Sidebar;

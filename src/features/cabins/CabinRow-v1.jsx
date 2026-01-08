@@ -1,27 +1,25 @@
 import styled from "styled-components";
-import { formatCurrency } from "../../utils/helpers.js";
-import { HiOutlineTrash } from "react-icons/hi2";
-import { HiOutlineDuplicate, HiOutlinePencil } from "react-icons/hi";
-import CreateCabinForm from "./CreateCabinForm.jsx";
-import { useDeleteCabin } from "./useDeleteCabin.js";
-import { useCreateCabin } from "./useCreateCabin.js";
-import Modal from "../../ui/Modal.jsx";
-import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
-import Table from "../../ui/Table.jsx";
 
-/*
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
+import CreateCabinForm from "./CreateCabinForm";
+import { useDeleteCabin } from "./useDeleteCabin";
+import { formatCurrency } from "../../utils/helpers";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { useCreateCabin } from "./useCreateCabin";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Table from "../../ui/Table";
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
-*/
+// const TableRow = styled.div`
+//   display: grid;
+//   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+//   column-gap: 2.4rem;
+//   align-items: center;
+//   padding: 1.4rem 2.4rem;
+
+//   &:not(:last-child) {
+//     border-bottom: 1px solid var(--color-grey-100);
+//   }
+// `;
 
 const Img = styled.img`
   display: block;
@@ -50,85 +48,21 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-const DeleteButton = styled.button`
-  background-color: var(--color-red-700);
-  border: none;
-  padding: 7px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background 0.2s;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    color: white;
-  }
-
-  &:hover {
-    background-color: var(--color-red-800);
-  }
-`;
-
-const EditButton = styled.button`
-  background-color: var(--color-grey-200);
-  border: none;
-  padding: 7px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background 0.2s;
-
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  &:hover {
-    background-color: var(--color-grey-300);
-  }
-`;
-
-const DuplicateButton = styled.button`
-  background-color: var(--color-brand-500);
-  border: none;
-  padding: 7px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background 0.2s;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    color: white;
-  }
-
-  &:hover {
-    background-color: var(--color-brand-600);
-  }
-`;
-
-const Actions = styled.div`
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-`;
-
-// eslint-disable-next-line react/prop-types
-export function CabinRow({ cabin }) {
-  // eslint-disable-next-line react/prop-types
-  const { id, name, maxCapacity, regularPrice, discount, image, description } =
-    cabin;
-
+function CabinRow({ cabin }) {
   const { isDeleting, deleteCabin } = useDeleteCabin();
-
   const { isCreating, createCabin } = useCreateCabin();
 
-  function handleDuplicating() {
+  const {
+    id: cabinId,
+    name,
+    maxCapacity,
+    regularPrice,
+    discount,
+    image,
+    description,
+  } = cabin;
+
+  function handleDuplicate() {
     createCabin({
       name: `Copy of ${name}`,
       maxCapacity,
@@ -140,49 +74,47 @@ export function CabinRow({ cabin }) {
   }
 
   return (
-    <>
-      <Table.Row role={"row"}>
-        <Img src={image} />
-        <Cabin>{name}</Cabin>
-        <div>fits up to {maxCapacity} guests</div>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        {discount ? (
-          <Discount>{formatCurrency(discount)}</Discount>
-        ) : (
-          <span>&mdash;</span>
-        )}
-        <Actions>
-          {/*Duplicate Button*/}
-          <DuplicateButton disabled={isCreating} onClick={handleDuplicating}>
-            <HiOutlineDuplicate />
-          </DuplicateButton>
-          <Modal>
-            {/*Edit Button*/}
-            <Modal.Open opens={"edit"}>
-              <EditButton>
-                <HiOutlinePencil />
-              </EditButton>
-            </Modal.Open>
-            <Modal.Window name={"edit"}>
-              <CreateCabinForm cabinToEdit={cabin} />
-            </Modal.Window>
+    <Table.Row>
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} guests</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      {discount ? (
+        <Discount>{formatCurrency(discount)}</Discount>
+      ) : (
+        <span>&mdash;</span>
+      )}
+      <div>
+        <button disabled={isCreating} onClick={handleDuplicate}>
+          <HiSquare2Stack />
+        </button>
 
-            {/*Delete Button*/}
-            <Modal.Open opens={"delete"}>
-              <DeleteButton>
-                <HiOutlineTrash />
-              </DeleteButton>
-            </Modal.Open>
-            <Modal.Window name={"delete"}>
-              <ConfirmDelete
-                resourceName="cabins"
-                disabled={isDeleting}
-                onConfirm={() => deleteCabin(id)}
-              />
-            </Modal.Window>
-          </Modal>
-        </Actions>
-      </Table.Row>
-    </>
+        <Modal>
+          <Modal.Open opens="edit">
+            <button>
+              <HiPencil />
+            </button>
+          </Modal.Open>
+          <Modal.Window name="edit">
+            <CreateCabinForm cabinToEdit={cabin} />
+          </Modal.Window>
+
+          <Modal.Open opens="delete">
+            <button>
+              <HiTrash />
+            </button>
+          </Modal.Open>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName="cabins"
+              disabled={isDeleting}
+              onConfirm={() => deleteCabin(cabinId)}
+            />
+          </Modal.Window>
+        </Modal>
+      </div>
+    </Table.Row>
   );
 }
+
+export default CabinRow;

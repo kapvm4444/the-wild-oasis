@@ -1,8 +1,8 @@
-import styled from "styled-components";
 import { createContext, useContext, useState } from "react";
-import { HiEllipsisVertical } from "react-icons/hi2";
 import { createPortal } from "react-dom";
-import useOutsideClick from "./../hooks/useOutsideClick.js";
+import { HiEllipsisVertical } from "react-icons/hi2";
+import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const Menu = styled.div`
   display: flex;
@@ -65,11 +65,12 @@ const StyledButton = styled.button`
   }
 `;
 
-const MenusContext = createContext(undefined);
+const MenusContext = createContext();
 
 function Menus({ children }) {
   const [openId, setOpenId] = useState("");
-  const [position, setPosition] = useState({});
+  const [position, setPosition] = useState(null);
+
   const close = () => setOpenId("");
   const open = setOpenId;
 
@@ -83,13 +84,15 @@ function Menus({ children }) {
 }
 
 function Toggle({ id }) {
-  const { open, close, openId, setPosition } = useContext(MenusContext);
-  function handleClick(e) {
-    const rect = e.target.closest("button").getBoundingClientRect();
+  const { openId, close, open, setPosition } = useContext(MenusContext);
 
+  function handleClick(e) {
+    e.stopPropagation();
+
+    const rect = e.target.closest("button").getBoundingClientRect();
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
-      y: rect.height + rect.y + 8,
+      y: rect.y + rect.height + 8,
     });
 
     openId === "" || openId !== id ? open(id) : close();
@@ -104,19 +107,19 @@ function Toggle({ id }) {
 
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useOutsideClick(close);
+  const ref = useOutsideClick(close, false);
 
-  if (openId !== id) return;
+  if (openId !== id) return null;
 
   return createPortal(
-    <StyledList ref={ref} position={position}>
+    <StyledList position={position} ref={ref}>
       {children}
     </StyledList>,
-    document.body,
+    document.body
   );
 }
 
-function Button({ children, onClick, icon }) {
+function Button({ children, icon, onClick }) {
   const { close } = useContext(MenusContext);
 
   function handleClick() {

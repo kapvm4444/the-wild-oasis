@@ -1,28 +1,23 @@
 import { useEffect, useRef } from "react";
 
-export default function UseOutsideClick(handler, listenCapturing = true) {
-  const ref = useRef(null);
+export function useOutsideClick(handler, listenCapturing = true) {
+  const ref = useRef();
 
   useEffect(
     function () {
       function handleClick(e) {
-        if (ref.current && !ref.current.contains(e.target)) handler();
-      }
-
-      function handleEscape(e) {
-        if (e.key === "Escape" || e.key === "Esc" || e.keyCode === 27)
+        if (ref.current && !ref.current.contains(e.target)) {
           handler();
+        }
       }
 
       document.addEventListener("click", handleClick, listenCapturing);
-      document.addEventListener("keydown", handleEscape, listenCapturing);
 
-      return () => {
+      return () =>
         document.removeEventListener("click", handleClick, listenCapturing);
-        document.removeEventListener("keydown", handleEscape, listenCapturing);
-      };
     },
-    [handler, listenCapturing],
+    [handler, listenCapturing]
   );
+
   return ref;
 }

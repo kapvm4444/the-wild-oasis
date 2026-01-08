@@ -12,7 +12,9 @@ import { useDeleteCabin } from "./useDeleteCabin.js";
 import { useCreateCabin } from "./useCreateCabin.js";
 import Modal from "../../ui/Modal.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
+import Table from "../../ui/Table.jsx";
 
+/*
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -24,6 +26,7 @@ const TableRow = styled.div`
     border-bottom: 1px solid var(--color-grey-100);
   }
 `;
+*/
 
 const Img = styled.img`
   display: block;
@@ -143,7 +146,7 @@ export function CabinRow({ cabin }) {
 
   return (
     <>
-      <TableRow role={"row"}>
+      <Table.Row role={"row"}>
         <Img src={image} />
         <Cabin>{name}</Cabin>
         <div>fits up to {maxCapacity} guests</div>
@@ -154,10 +157,12 @@ export function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <Actions>
+          {/*Duplicate Button*/}
           <DuplicateButton disabled={isCreating} onClick={handleDuplicating}>
             <HiOutlineDuplicate />
           </DuplicateButton>
           <Modal>
+            {/*Edit Button*/}
             <Modal.Open opens={"edit"}>
               <EditButton>
                 <HiOutlinePencil />
@@ -182,7 +187,7 @@ export function CabinRow({ cabin }) {
             </Modal.Window>
           </Modal>
         </Actions>
-      </TableRow>
+      </Table.Row>
     </>
   );
 }
